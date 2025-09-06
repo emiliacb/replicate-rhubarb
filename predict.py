@@ -5,7 +5,7 @@ import tempfile
 import subprocess
 import base64
 from typing import List, Dict, Any
-from cog import BasePredictor, Input, File
+from cog import BasePredictor, Input
 
 
 class Predictor(BasePredictor):
@@ -13,11 +13,28 @@ class Predictor(BasePredictor):
         """Initialize the predictor - no model loading needed for Rhubarb"""
         pass
 
-    def predict(self, audio_data: str = Input(description="Audio data as base64 string for lip sync analysis")) -> str:
+    def predict(self, 
+                audio_data: str = Input(description="Audio data as base64 string for lip sync analysis"),
+                wake_up: bool = Input(default=False, description="Set to true to wake up the model without processing audio")) -> str:
         """
         Process audio data with Rhubarb lip sync analysis
         """
         try:
+            # Check if this is a wake up call
+            if wake_up:
+                return json.dumps({
+                    "status": "OK", 
+                    "message": "Rhubarb model is ready",
+                    "mouthCues": []
+                })
+            
+            # Validate audio data for normal processing
+            if not audio_data or audio_data.strip() == "":
+                return json.dumps({
+                    "error": "No audio data provided", 
+                    "mouthCues": []
+                })
+            
             # Generate unique timestamp for temp files
             timestamp = str(int(time.time() * 1000))
             
