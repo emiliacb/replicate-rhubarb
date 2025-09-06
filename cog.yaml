@@ -1,0 +1,18 @@
+build:
+  python_version: "3.12"
+  system_packages:
+    - "ca-certificates"
+    - "libc6"
+    - "unzip"
+    - "libsndfile1"
+    - "libportaudio2"
+    - "curl"
+    - "ffmpeg"
+  run:
+    - "curl -L -o rhubarb.zip https://github.com/DanielSWolf/rhubarb-lip-sync/releases/download/v1.13.0/Rhubarb-Lip-Sync-1.13.0-Linux.zip"
+    - "unzip rhubarb.zip"
+    - "mv Rhubarb-Lip-Sync-1.13.0-Linux/rhubarb /usr/local/bin/"
+    - "mv Rhubarb-Lip-Sync-1.13.0-Linux/res /usr/local/bin/"
+    - "chmod +x /usr/local/bin/rhubarb"
+    - "rm -rf Rhubarb-Lip-Sync-1.13.0-Linux* rhubarb.zip"
+predict: "predict.py:Predictor"
